@@ -15,8 +15,8 @@ class IndeedJobSpider(scrapy.Spider):
 
 
     def start_requests(self):
-        keyword_list = ['software engineer']
-        location_list = ['California']
+        keyword_list = ['warehouse worker']
+        location_list = ['Wisconsin']
         for keyword in keyword_list:
             for location in location_list:
                 indeed_jobs_url = self.get_indeed_search_url(keyword, location)
@@ -71,9 +71,9 @@ class IndeedJobSpider(scrapy.Spider):
                 'location': location,
                 'page': page,
                 'position': position,
-                'company': job.get('companyName'),
+                'company': job.get('jobInfoHeaderModel',{}).get('companyName'),
                 'jobkey': response.meta['jobKey'],
-                'jobTitle': job.get('jobTitle'),
+                'jobTitle': job.get('jobInfoHeaderModel',{}).get('jobTitle'),
                 'jobDescription': job.get('sanitizedJobDescription').get('content') if job.get('sanitizedJobDescription') is not None else '',
             }
 
