@@ -1,0 +1,6 @@
+scrapy
+scrapeops-scrapy-proxy-sdk
+scrapeops_scrapy
+streamlit
+pandas
+python-dotenv
