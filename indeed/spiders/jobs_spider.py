@@ -3,6 +3,7 @@ import json
 import scrapy
 from urllib.parse import urlencode
 import os
+import pdb
 
 class IndeedJobSpider(scrapy.Spider):
     name = "indeed_jobs"
@@ -24,6 +25,7 @@ class IndeedJobSpider(scrapy.Spider):
                 yield scrapy.Request(url=indeed_jobs_url, callback=self.parse_search_results, meta={'keyword': keyword, 'location': location, 'offset': 0})
 
     def parse_search_results(self, response):
+        
         location = response.meta['location']
         keyword = response.meta['keyword'] 
         offset = response.meta['offset'] 
@@ -34,9 +36,9 @@ class IndeedJobSpider(scrapy.Spider):
             ## Extract Jobs From Search Page
             jobs_list = json_blob['metaData']['mosaicProviderJobCardsModel']['results']
             for index, job in enumerate(jobs_list):
-                # TODO: REMOVE
-                if index > 3:
-                    continue
+                # # TODO: REMOVE
+                # if index > 3:
+                #     continue
                 if job.get('jobkey') is not None:
                     job_url = 'https://www.indeed.com/m/basecamp/viewjob?viewtype=embedded&jk=' + job.get('jobkey')
                     yield scrapy.Request(url=job_url, 
@@ -58,8 +60,8 @@ class IndeedJobSpider(scrapy.Spider):
                     num_results = 50
                 
                 # TODO: REMOVE
-                # for offset in range(10, num_results + 10, 10):
-                for offset in range(2):
+                # for offset in range(2):
+                for offset in range(10, num_results + 10, 10):
                     url = self.get_indeed_search_url(keyword, location, offset)
                     yield scrapy.Request(url=url, callback=self.parse_search_results, meta={'keyword': keyword, 'location': location, 'offset': offset})
     
