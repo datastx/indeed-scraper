@@ -74,7 +74,12 @@ if find_jobs:
     print(f"file name is {st.session_state.file_name}")
     subprocess.run(call_scrappy(st.session_state.file_name).split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
         
-    
+
+@st.cache
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
+
 
 with st.expander(f"See History: count={st.session_state.mdf.shape[0]}"):
     st.dataframe(st.session_state.mdf)
@@ -84,3 +89,12 @@ if st.session_state.file_name is not None:
         st.title('Search Results')
         data = pd.read_csv(st.session_state.file_name,dtype=object)
         st.dataframe(data=data)
+
+        csv = convert_df(data)
+
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name=f'{st.session_state.file_name}.csv',
+            mime='text/csv',
+        )
