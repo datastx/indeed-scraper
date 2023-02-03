@@ -4,3 +4,6 @@ scrapeops_scrapy
 streamlit
 pandas
 python-dotenv
+watchdog
+streamlit-aggrid
+plotly
