@@ -1,9 +1,10 @@
 import json
+import logging
 import os
+import pdb
 import re
 from urllib.parse import urlencode
-import pdb
-import logging
+
 import scrapy
 
 
@@ -51,8 +52,8 @@ class IndeedJobSpider(scrapy.Spider):
             match = re.search(pattern, response.text)
             num_results = int(match.group(1).replace(",", ""))
             # We want this to error if not set
-            start_page = int(os.getenv('START_PAGE',None))
-            end_page = int(os.getenv('END_PAGE',None))
+            start_page = int(os.getenv("START_PAGE", None))
+            end_page = int(os.getenv("END_PAGE", None))
             for index, _ in enumerate(range(0, num_results, 15)):
                 if start_page <= index + 1 < end_page:
                     if index == 0:
