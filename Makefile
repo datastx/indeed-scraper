@@ -1,5 +1,6 @@
 NAME=indeed-webscraper
 WORKDIR = $(shell pwd)
+PYTHONPATH:= $(PYTHONPATH):$(WORKDIR)/indeed-scraper
 DOT_ENV = $(WORKDIR)/.env
 VENV_DIR = $(WORKDIR)/.venv
 VENV_BIN = $(VENV_DIR)/bin
@@ -11,10 +12,10 @@ POSTGRES_DOCKER_FILE = $(DOCKER_FILES)/Dockerfile.postgres
 
 
 run:
-	streamlit run app/main.py
+	export PYTHONPATH=$(PYTHONPATH)
+	streamlit run app/money_gun.py
 
 scrapy:
-	export DOT_ENV=$(DOT_ENV) 
-	scrapy crawl indeed_jobs -o indeed_jobs_data.csv
+	scrapy crawl indeed_jobs -o test.csv
 
 include Makefile.venv

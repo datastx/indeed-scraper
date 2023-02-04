@@ -7,3 +7,4 @@ python-dotenv
 watchdog
 streamlit-aggrid
 plotly
+streamlit-toggle-switch
