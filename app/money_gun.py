@@ -88,6 +88,17 @@ with st.expander(f"Advanced search options"):
     )
 number_of_pages = end_page - start_page
 
+write1, write2, write3, write4 = st.columns([1, 1, 1,1])
+with write1:
+    st.write("start page:", start_page)
+with write2:
+    st.write("end page:", end_page)
+with write3:
+    st.write(f"Number of pages:", number_of_pages)
+with write4:
+    st.write("Sort By Date:", sort_by)
+
+
 but1, but2 = st.columns([1, 1])
 with but1:
     if number_of_pages < 1:
@@ -95,16 +106,20 @@ with but1:
     else:
         find_jobs = st.button("Find Jobs")
 with but2:
-    proxy_logs = st.button("Proxy Logs")
+    proxy_logs = tog.st_toggle_switch(
+        label="Proxy Logs",
+        key="Proxy Logs",
+        default_value=False,
+        label_after=True,
+        inactive_color="#D3D3D3",
+        active_color="white",
+        track_color="red",
+    )
     if proxy_logs:
         # Hack to get the link to work atm
         proxy_logs_link = "https://scrapeops.io/app/dashboard"
         st.markdown(proxy_logs_link, unsafe_allow_html=True)
 
-st.write("start page:", start_page, "end page:", end_page)
-
-st.write(f"Number of pages:", number_of_pages)
-st.write("Sort By Date:", sort_by)
 
 
 
