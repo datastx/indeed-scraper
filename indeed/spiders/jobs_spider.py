@@ -3,15 +3,40 @@ import logging
 import os
 import pdb
 import re
+from typing import Any, Dict, Generator
 from urllib.parse import urlencode
 
 import scrapy
 
 
 class IndeedJobSpider(scrapy.Spider):
+    """Class that needs to be fed to scrapy.cfg
+
+    Args:
+        scrapy (_type_):
+
+    Returns:
+        _type_:
+
+    Yields:
+        _type_:
+    """
+
     name = "indeed_jobs"
 
-    def get_indeed_search_url(self, keyword, location, offset=0):
+    def get_indeed_search_url(
+        self, keyword: str, location: str, offset: int = 0
+    ) -> str:
+        """Creates the encoded url for indeed to make sense of
+
+        Args:
+            keyword (str): The job we're searching for
+            location (str): The location of the job, ie, Tampa, FL
+            offset (int, optional): What page we're on. Defaults to 0.
+
+        Returns:
+            str: https://www.indeed.com/jobs?q=data+engineer&l=Tampa%2C+FL&from=searchOnHP&vjk=ba2594771788fc9a
+        """
         parameters = {
             "q": keyword,
             "l": location,
@@ -23,7 +48,12 @@ class IndeedJobSpider(scrapy.Spider):
         logging.info(f"requesting url:{url}")
         return url
 
-    def start_requests(self):
+    def start_requests(self) -> Generator[scrapy.Request, Any, Any]:
+        """Entry point into the scrapy spider class
+
+        Yields:
+            Generator[scrapy.Request, Any, Any]:
+        """
         keyword_list = [os.environ.get("WHAT", None)]
         location_list = [os.environ.get("WHERE", None)]
         for keyword in keyword_list:
@@ -39,7 +69,18 @@ class IndeedJobSpider(scrapy.Spider):
                     },
                 )
 
-    def count_total_jobs_in_search(self, response):
+    def count_total_jobs_in_search(
+        self, response: scrapy.Request
+    ) -> Generator[scrapy.Request, Any, Any]:
+        """Scrapes the search page so we know how many
+            jobs we're going to get based on some parameters
+
+        Args:
+            response (scrapy.Request):
+
+        Yields:
+            Generator[scrapy.Request, Any, Any]:
+        """
         location = response.meta["location"]
         keyword = response.meta["keyword"]
         offset = response.meta["offset"]
@@ -76,7 +117,19 @@ class IndeedJobSpider(scrapy.Spider):
                         },
                     )
 
-    def submit_jobs_per_page(self, response):
+    def submit_jobs_per_page(
+        self, response: scrapy.Request
+    ) -> Generator[scrapy.Request, Any, Any]:
+        """Exctracts the job key from the search page
+            so we can then submit a scrape directly to the
+            jobs page.
+
+        Args:
+            response (scrapy.Request): _description_
+
+        Yields:
+            Generator[scrapy.Request, Any, Any]: _description_
+        """
         location = response.meta["location"]
         keyword = response.meta["keyword"]
 
@@ -115,7 +168,16 @@ class IndeedJobSpider(scrapy.Spider):
                             },
                         )
 
-    def parse_job(self, response):
+    def parse_job(self, response: scrapy.Request) -> Dict[str, str]:
+        """Extracts data from the Jobs page scrape
+            and writes the data
+
+        Args:
+            response (scrapy.Request):
+
+        Yields:
+            Generator[scrapy.Request, Any, Any]:
+        """
         location = response.meta["location"]
         keyword = response.meta["keyword"]
         page = response.meta["page"]
