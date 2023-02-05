@@ -99,20 +99,21 @@ class IndeedJobSpider(scrapy.Spider):
                         "https://www.indeed.com/m/basecamp/viewjob?viewtype=embedded&jk="
                         + job.get("jobkey")
                     )
-                    yield scrapy.Request(
-                        url=indeed_job_url,
-                        callback=self.parse_job,
-                        meta={
-                            "keyword": keyword,
-                            "location": location,
-                            "page": page,
-                            "position": index,
-                            "jobKey": job.get("jobkey"),
-                            "indeed_jobs_search_url": indeed_jobs_search_url,
-                            "indeed_job_url": indeed_job_url,
-                            "num_results": num_results,
-                        },
-                    )
+                    if index < int(os.getenv("JOBS_PER_PAGE")):
+                        yield scrapy.Request(
+                            url=indeed_job_url,
+                            callback=self.parse_job,
+                            meta={
+                                "keyword": keyword,
+                                "location": location,
+                                "page": page,
+                                "position": index,
+                                "jobKey": job.get("jobkey"),
+                                "indeed_jobs_search_url": indeed_jobs_search_url,
+                                "indeed_job_url": indeed_job_url,
+                                "num_results": num_results,
+                            },
+                        )
 
     def parse_job(self, response):
         location = response.meta["location"]

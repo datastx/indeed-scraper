@@ -77,25 +77,35 @@ with st.expander(f"Advanced search options"):
     )
     start_page = st.number_input("Start Page:(inclusive)", value=1, step=1)
     end_page = st.number_input("End Page:(exclusive)", value=2, step=1)
+    jobs_per_page = st.slider(
+        "Jobs Per Page:",
+        min_value=1,
+        max_value=15,
+        value=15,
+        step=1,
+        label_visibility="visible",
+    )
     sort_by = tog.st_toggle_switch(
         label="Date",
         key="Key1",
         default_value=True,
-        label_after=True,
+        label_after=False,
         inactive_color="#D3D3D3",
         active_color="white",
         track_color="red",
     )
 number_of_pages = end_page - start_page
 
-write1, write2, write3, write4 = st.columns([1, 1, 1,1])
+write1, write2, write3, write4, write5 = st.columns([1, 1, 1, 1,1])
 with write1:
-    st.write("start page:", start_page)
+    st.write("Start Page:", start_page)
 with write2:
-    st.write("end page:", end_page)
+    st.write("End Page:", end_page)
 with write3:
-    st.write(f"Number of pages:", number_of_pages)
+    st.write(f"Number of Pages:", number_of_pages)
 with write4:
+    st.write(f"Number of Jobs per Page", jobs_per_page)
+with write5:
     st.write("Sort By Date:", sort_by)
 
 
@@ -121,8 +131,6 @@ with but2:
         st.markdown(proxy_logs_link, unsafe_allow_html=True)
 
 
-
-
 # Critical path for running scrapy
 if find_jobs:
     st.session_state.file_name = add_csv_ext(new_uuid())
@@ -145,6 +153,7 @@ if find_jobs:
     os.environ[WHERE.upper()] = where
     os.environ["START_PAGE"] = str(start_page)
     os.environ["END_PAGE"] = str(end_page)
+    os.environ["JOBS_PER_PAGE"] = str(jobs_per_page)
     call_scrappy = lambda x: f"scrapy crawl indeed_jobs -o {x}"
     subprocess.run(
         call_scrappy(st.session_state.file_name).split(), stdout=subprocess.PIPE
