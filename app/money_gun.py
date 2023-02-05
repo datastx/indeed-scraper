@@ -103,7 +103,7 @@ with write2:
 with write3:
     st.write(f"Number of Pages:", number_of_pages)
 with write4:
-    st.write(f"Number of Jobs Scraped Per Page", jobs_per_page)
+    st.write(f"Number of Jobs Scraped Per Page:", jobs_per_page)
 with write5:
     st.write("Sort By Date:", sort_by)
 
