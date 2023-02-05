@@ -71,11 +71,15 @@ col0, col1 = st.columns(2)
 what = col0.text_input(WHAT)
 where = col1.text_input(WHERE)
 with st.expander(f"Advanced search options"):
-    st.error(
-        "each page has ~15 records and runs this inequality...Start Page <= n < End Page"
+
+    help_msg = "each page has ~15 records and runs this inequality...Start Page <= n < End Page"
+
+    start_page = st.number_input(
+        "Start Page:(inclusive)", min_value=1, help=help_msg, value=1, step=1
     )
-    start_page = st.number_input("Start Page:(inclusive)", value=1, step=1)
-    end_page = st.number_input("End Page:(exclusive)", value=2, step=1)
+    end_page = st.number_input(
+        "End Page:(exclusive)", min_value=2, help=help_msg, value=2, step=1
+    )
     jobs_per_page = st.slider(
         "Jobs Per Page:",
         min_value=1,
@@ -95,7 +99,7 @@ with st.expander(f"Advanced search options"):
     )
 number_of_pages = end_page - start_page
 
-write1, write2, write3, write4, write5 = st.columns([1, 1, 1, 1,1])
+write1, write2, write3, write4, write5 = st.columns([1, 1, 1, 1, 1])
 with write1:
     st.write("Start Page:", start_page)
 with write2:
