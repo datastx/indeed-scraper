@@ -45,6 +45,7 @@ HUB_SPOT = "Hub Spot"
 
 ALL_NAVIATION_OPTIONS = [MONEY_GUN, ZOOM_INFO, HUB_SPOT]
 
+SORT_BY_HELP_MSG = "Sorts by relevance or date posted. Defaults to Date"
 
 def add_csv_ext(str_obj: str) -> str:
     return f"{str_obj}.csv"
@@ -87,16 +88,12 @@ with st.expander(f"Advanced search options"):
         value=15,
         step=1,
         label_visibility="visible",
+        help="There should only be a range of 1-15 jobs per search page on indeed. If that changes update the code base."
     )
-    sort_by = tog.st_toggle_switch(
-        label="Date",
-        key="Key1",
-        default_value=True,
-        label_after=False,
-        inactive_color="#D3D3D3",
-        active_color="white",
-        track_color="red",
-    )
+    
+    sort_by = st.selectbox(
+    'How would you like your search results sorted by?',
+    ('Date','Relevance'),help=SORT_BY_HELP_MSG)
 number_of_pages = end_page - start_page
 
 write1, write2, write3, write4, write5 = st.columns([1, 1, 1, 1, 1])
@@ -109,7 +106,7 @@ with write3:
 with write4:
     st.write(f"Number of Jobs Scraped Per Page:", jobs_per_page)
 with write5:
-    st.write("Sort By Date:", sort_by)
+    st.write("Sort By = ", sort_by)
 
 
 but1, but2 = st.columns([1, 1])
@@ -157,6 +154,7 @@ if find_jobs:
     os.environ["START_PAGE"] = str(start_page)
     os.environ["END_PAGE"] = str(end_page)
     os.environ["JOBS_PER_PAGE"] = str(jobs_per_page)
+    os.environ['SORT_BY'] = sort_by
     call_scrappy = lambda x: f"scrapy crawl indeed_jobs -o {x}"
     subprocess.run(
         call_scrappy(st.session_state.file_name).split(), stdout=subprocess.PIPE
