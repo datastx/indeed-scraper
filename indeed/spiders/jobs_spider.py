@@ -40,10 +40,11 @@ class IndeedJobSpider(scrapy.Spider):
         parameters = {
             "q": keyword,
             "l": location,
-            "sort": "date",
             "filter": 0,
             "start": offset,
         }
+        if os.getenv('SORT_BY') == 'Date':
+            parameters['sort'] = "date"
         url = "https://www.indeed.com/jobs?" + urlencode(parameters)
         logging.info(f"requesting url:{url}")
         return url
