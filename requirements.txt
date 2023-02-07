@@ -8,3 +8,8 @@ watchdog
 streamlit-aggrid
 plotly
 streamlit-toggle-switch
+bokeh
+streamlit_bokeh_events
+tabulate
+bs4
+streamlit-aggrid
