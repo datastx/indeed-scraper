@@ -10,6 +10,7 @@ import streamlit_toggle as tog
 new_uuid = lambda: str(uuid4())
 
 INDEED_URL = "https://www.indeed.com/"
+SCRAPPY_WORKING_DIR = os.path.realpath(os.path.dirname(__file__))
 
 # CONSTANTS
 KEYWORD = "keyword"
@@ -155,7 +156,8 @@ if find_jobs:
     os.environ["END_PAGE"] = str(end_page)
     os.environ["JOBS_PER_PAGE"] = str(jobs_per_page)
     os.environ['SORT_BY'] = sort_by
-    call_scrappy = lambda x: f"scrapy crawl indeed_jobs -o {x}"
+    call_scrappy = lambda x: f"scrapy crawl indeed_jobs -o {os.path.join(os.getcwd(),x)}"
+    os.chdir(SCRAPPY_WORKING_DIR)
     subprocess.run(
         call_scrappy(st.session_state.file_name).split(), stdout=subprocess.PIPE
     ).stdout.decode("utf-8")
